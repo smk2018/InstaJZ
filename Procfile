@@ -1,0 +1,1 @@
+web: gunicorn InstaJZ.wegi --log-file -
