@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
 from Insta.forms import CustomUserCreationForm
-from Insta.models import Post, Like
+from Insta.models import Post, Like, InstaUser
 
 
 class HelloWorld(TemplateView):
@@ -18,6 +18,10 @@ class PostsView(ListView):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post_detail.html'
+
+class UserDetailView(DetailView):
+    model = InstaUser
+    template_name = 'user_detail.html'
 
 class PostCreateView(LoginRequiredMixin,CreateView):
     model = Post
