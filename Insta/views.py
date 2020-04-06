@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
 
 from Insta.forms import CustomUserCreationForm
-from Insta.models import Post, Like, InstaUser
+from Insta.models import Post, Like, InstaUser,UserConnection
 
 
 class HelloWorld(TemplateView):
@@ -14,6 +14,13 @@ class HelloWorld(TemplateView):
 class PostsView(ListView):
     model = Post
     template_name = 'index.html'
+
+    def get_queryset(self):
+        current_user = self.request.user
+        following = set()
+        for conn in UserConnection.objects.filter(creator=current_user).select_related('following'):
+            following.add(conn.following)
+        return Post.objects.filter(author__in=following)
 
 class PostDetailView(DetailView):
     model = Post
@@ -43,6 +50,7 @@ class SignUp(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'signup.html'
     success_url = reverse_lazy("login") 
+
 
 @ajax_request
 def addLike(request):
